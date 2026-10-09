@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Task Manager</title>
+  <!-- Link the CSS file -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Floating background bubbles (pure decoration) -->
+  <div class="bubbles">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <main class="app">
+
+    <!-- Header -->
+    <header class="header">
+      <h1><span id="header-emoji" class="wave">📝</span> My Day</h1>
+      <p id="today-date" class="date"></p>
+    </header>
+
+    <!-- Progress bar: shows how many tasks are done -->
+    <section class="progress-section">
+      <div class="progress-info">
+        <span id="progress-text">0 of 0 done</span>
+        <span id="progress-percent">0%</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+    </section>
+
+    <!-- Form to add a new task -->
+    <form id="task-form" class="task-form">
+      <input
+        type="text"
+        id="task-input"
+        placeholder="What do you need to do today?"
+        autocomplete="off"
+        required
+      />
+      <select id="priority-select">
+        <option value="low">🟢 Low</option>
+        <option value="medium" selected>🟡 Medium</option>
+        <option value="high">🔴 High</option>
+      </select>
+      <button type="submit" class="add-btn">Add</button>
+    </form>
+
+    <!-- Filter buttons -->
+    <nav class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="active">Active</button>
+      <button class="filter-btn" data-filter="completed">Completed</button>
+    </nav>
+
+    <!-- The task list gets filled in by JavaScript -->
+    <ul id="task-list" class="task-list"></ul>
+
+    <!-- Shown when there are no tasks -->
+    <p id="empty-message" class="empty-message">🎉 Nothing here! Add a task to get started.</p>
+
+    <!-- Footer actions -->
+    <footer class="footer">
+      <span id="items-left">0 tasks left</span>
+      <button id="clear-completed" class="clear-btn">Clear completed</button>
+    </footer>
+
+  </main>
+
+  <!-- Link the JavaScript file (at the end so the HTML loads first) -->
+  <script src="script.js"></script>
+</body>
+</html>

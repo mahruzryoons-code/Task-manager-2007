@@ -1,0 +1,401 @@
+/* ---------- 1. Reset + colour variables ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #dfe9e3;        /* page background: soft sage green (change me!) */
+  --card: #ffffff;
+  --text: #26302b;
+  --muted: #7a877f;
+  --line: #edf0ee;
+  --accent: #3d6b57;
+
+  --low: #8fbf9f;
+  --medium: #e3c26b;
+  --high: #d9826f;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px 16px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* ---------- 2. Animations ---------- */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes taskIn {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes taskOut {
+  to { opacity: 0; transform: translateX(40px); height: 0; padding: 0; margin: 0; }
+}
+
+@keyframes pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+@keyframes bump {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+/* ---------- 3. Main card ---------- */
+.app {
+  width: 100%;
+  max-width: 520px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  animation: slideDown 0.5s ease;
+}
+
+.header h1 {
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.date {
+  color: var(--muted);
+  margin-top: 2px;
+  font-size: 0.9rem;
+}
+
+/* ---------- 4. Progress ---------- */
+.progress-section {
+  margin: 24px 0;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.progress-track {
+  height: 6px;
+  background: var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+/* ---------- 5. Add-task form ---------- */
+.task-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.task-form.shake {
+  animation: shake 0.3s;
+}
+
+#task-input {
+  flex: 1;
+  padding: 11px 14px;
+  border: 1px solid #dde3df;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#task-input:focus {
+  border-color: var(--accent);
+}
+
+#priority-select {
+  padding: 0 8px;
+  border: 1px solid #dde3df;
+  border-radius: 10px;
+  background: white;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.add-btn {
+  padding: 0 18px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.add-btn:hover {
+  opacity: 0.88;
+}
+
+.add-btn:active {
+  transform: scale(0.95);
+}
+
+/* ---------- 6. Filter tabs ---------- */
+.filters {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.filter-btn {
+  padding: 8px 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.filter-btn:hover {
+  color: var(--text);
+}
+
+.filter-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ---------- 7. Task list ---------- */
+.task-list {
+  list-style: none;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 4px 14px 12px;
+  border-bottom: 1px solid var(--line);
+  border-left: 3px solid var(--medium);
+  transition: background 0.2s;
+}
+
+.task:hover {
+  background: #fafbfa;
+}
+
+/* Only tasks with the "enter" class slide in (JS adds it) */
+.task.enter {
+  animation: taskIn 0.35s ease both;
+}
+
+.task.removing {
+  animation: taskOut 0.3s forwards;
+}
+
+.task.low    { border-left-color: var(--low); }
+.task.medium { border-left-color: var(--medium); }
+.task.high   { border-left-color: var(--high); }
+
+/* Round checkbox */
+.check {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ccd5cf;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: transparent;
+  font-size: 12px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.check:hover {
+  border-color: var(--accent);
+}
+
+.task.done .check {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* Pop only on the task you just ticked */
+.task.just-done .check {
+  animation: pop 0.3s;
+}
+
+.task-text {
+  flex: 1;
+  position: relative;
+  word-break: break-word;
+  transition: color 0.3s;
+}
+
+/* Animated strike-through line */
+.task-text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 1.5px;
+  width: 0;
+  background: var(--muted);
+  transition: width 0.3s ease;
+}
+
+.task.done .task-text {
+  color: var(--muted);
+}
+
+.task.done .task-text::after {
+  width: 100%;
+}
+
+/* "Done on" date space */
+.done-date {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.done-date input {
+  border: none;
+  border-bottom: 1px dashed #ccd5cf;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: var(--text);
+  padding: 2px 0;
+  outline: none;
+  transition: opacity 0.3s, border-color 0.2s;
+}
+
+.done-date input:focus {
+  border-bottom-color: var(--accent);
+}
+
+/* Faded and locked until the task is ticked */
+.done-date input:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  opacity: 0.4;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+  color: var(--high);
+}
+
+/* ---------- 8. Empty message + footer ---------- */
+.empty-message {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 28px 0;
+  display: none;
+}
+
+.empty-message.show {
+  display: block;
+  animation: slideDown 0.4s ease;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.clear-btn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.clear-btn:hover {
+  color: var(--high);
+}
+
+/* Numbers bump when they change */
+.bump {
+  display: inline-block;
+  animation: bump 0.3s ease;
+}
+
+/* ---------- 9. Small screens ---------- */
+@media (max-width: 480px) {
+  .app { padding: 22px; }
+  .task-form { flex-wrap: wrap; }
+  #task-input { flex-basis: 100%; }
+  #priority-select, .add-btn { flex: 1; padding: 11px; }
+  .task { flex-wrap: wrap; }
+  .done-date { order: 5; flex-basis: 100%; padding-left: 34px; }
+}
+
+/* Respect people who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
